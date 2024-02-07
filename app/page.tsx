@@ -17,7 +17,9 @@ export default function Home() {
           <h1 className="text-7xl">Brian's Burger Co.</h1>
           <Image className="m-8 rounded-3xl" src="/burgerlogo-min.png" width={500} height={500} alt="Company Logo" />
         </div>
-        <Link href="/login">Login</Link>
+        <Link href="/login" className="border border-slate-300 p-4 text-3xl rounded-lg">
+          Login
+        </Link>
       </div>
     );
   }

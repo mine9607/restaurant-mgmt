@@ -1,5 +1,4 @@
 import LogoutButton from "@/components/LogoutButton";
-import { signOut } from "next-auth/react";
 import React from "react";
 
 const getData = async () => {
