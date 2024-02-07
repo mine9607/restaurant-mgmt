@@ -1,0 +1,20 @@
+# Service for the PostgreSQL database
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: briansburgers
+    ports:
+      - 5432:5432
+    # Expose port 5432 for accessing the database
+
+  # Service for Adminer, a web-based database management tool
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    # Expose port 8080 for accessing Adminer web interface
