@@ -1,27 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/dbconnect";
+import { NextRequest, NextResponse } from "next/server";
 
-// FETCH ALL PRODUCTS
+//Fetch all products
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
-  const cat = searchParams.get("category");
+  const cat = searchParams.get("cat");
 
   try {
     const products = await prisma.product.findMany({
       where: {
-        ...(cat ? { category: cat } : { category: "Seasonal" }),
+        ...(cat ? { category: cat } : {}),
       },
     });
     return new NextResponse(JSON.stringify(products), { status: 200 });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return new NextResponse(JSON.stringify({ message: "Something went wrong!" }), { status: 500 });
   }
-};
-
-// export const GET = () => {
-//   return new NextResponse("Hello", { status: 200 });
-// };
-export const POST = () => {
-  return new NextResponse("Hello", { status: 200 });
 };

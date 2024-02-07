@@ -1,22 +1,26 @@
 "use client";
-import SignInCard from "@/components/SignInCard";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const LoginPage = () => {
-  const { status } = useSession();
+  const { data, status } = useSession();
   const router = useRouter();
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
   }
 
   if (status === "authenticated") {
-    router.push("/");
+    router.push("/dashboard");
   }
 
-  return <SignInCard />;
+  return (
+    <div>
+      LoginPage
+      <button onClick={() => signIn("google")}>SignIn</button>
+    </div>
+  );
 };
 
 export default LoginPage;
