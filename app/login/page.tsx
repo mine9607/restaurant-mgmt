@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { OAuthLogin } from "@/components/oauth-login";
 
 const LoginPage = () => {
-  const { data, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   if (status === "loading") {
