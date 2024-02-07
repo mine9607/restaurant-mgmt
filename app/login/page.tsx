@@ -1,22 +1,22 @@
 "use client";
-import React from "react";
+import SignInCard from "@/components/SignInCard";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { OAuthLogin } from "@/components/oauth-login";
+import React from "react";
 
 const LoginPage = () => {
   const { status } = useSession();
   const router = useRouter();
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <p>Loading...</p>;
   }
 
   if (status === "authenticated") {
     router.push("/");
   }
 
-  return <OAuthLogin />;
+  return <SignInCard />;
 };
 
 export default LoginPage;

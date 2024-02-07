@@ -12,25 +12,29 @@ datasource db {
 
 // Represents an account associated with a user
 model Account {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(cuid())
   userId             String
   providerType       String
   providerId         String
   providerAccountId  String
-  refreshToken       String?   
-  accessToken        String?   
+  refreshToken       String?
+  accessToken        String?
   accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
   user               User      @relation(fields: [userId], references: [id])
+
   @@unique([providerId, providerAccountId])
 }
 
-// Represents a user session
 model Session {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(cuid())
   userId       String
   expires      DateTime
   sessionToken String   @unique
   accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id])
 }
 
@@ -41,6 +45,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   isAdmin       Boolean   @default(false)
   accounts      Account[]
   sessions      Session[]
@@ -49,17 +55,20 @@ model User {
 
 // Represents a verification request
 model VerificationRequest {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   identifier String
   token      String   @unique
   expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   @@unique([identifier, token])
 }
 
 // Represents an order
 model Order {
   id        Int      @id @default(autoincrement())
-  items     ItemOnOrder[]
+  products  ProductOnOrder[]
   table     Table    @relation(fields: [tableId], references: [id])
   tableId   Int
   invoiceId Int?     @unique
@@ -68,27 +77,28 @@ model Order {
   paid      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+  userEmail String
 }
 
-// Represents an item
-model Item {
+// Represents a product
+model Product {
   id        Int      @id @default(autoincrement())
   name      String
   price     Float
   category  String
   img       String?
-  orders    ItemOnOrder[]
+  orders    ProductOnOrder[]
 }
 
-// Represents an item on an order
-model ItemOnOrder {
-  orderId Int
-  itemId  Int
-  quantity Int
-  order   Order  @relation(fields: [orderId], references: [id])
-  item    Item   @relation(fields: [itemId], references: [id])
+// Represents a product on an order
+model ProductOnOrder {
+  orderId   Int
+  productId Int
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 
-  @@id([orderId, itemId])
+  @@id([orderId, productId])
 }
 
 // Represents a table

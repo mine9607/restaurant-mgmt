@@ -4,17 +4,30 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
-// Create a new instance of PrismaClient
-// PrismaClient is used to interact with the postgres database
+// we use this to add the isAdmin property to the user object
+declare module "next-auth" {
+  interface Session {
+    user: User & {
+      isAdmin: Boolean;
+    };
+  }
+}
+
+// we use this to add the isAdmin property to the jwt token
+declare module "next-auth/jwt" {
+  interface JWT {
+    isAdmin: Boolean;
+  }
+}
+
+// prisma is used to connect to the database
 const prisma = new PrismaClient();
 
-// Define the authOptions object
-// This object is used to configure authentication settings
+// authOptions is used to configure the next-auth library
+// we use this to configure the different providers
+// we also use this to configure the session and jwt token
 export const authOptions: NextAuthOptions = {
-  // Use the PrismaAdapter with your PrismaClient instance
-  // This tells NextAuth.js to use Prisma as your database adapter
-  adapter: PrismaAdapter(prisma),
-  // Configure one or more authentication providers
+  // adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
@@ -25,6 +38,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
+  debug: true,
 };
 
+// this code allows us to get our user and status inside of server components
+// we can use this to check if a user is logged in or not on the server
+// and we can also use this to get the user's information on the server
 export const getAuthSession = () => getServerSession(authOptions);
